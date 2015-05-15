@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html>
+<head lang="en">
+  <meta charset="UTF-8"/>
+  <title>ID and Mobile-ID sample app</title>
+  <link rel="stylesheet" href="css/bootstrap.css"/>
+  <link rel="stylesheet" href="css/app.css"/>
+  <script src="js/hwcrypto.js"/>
+  <script src="js/hwcrypto-legacy.js"/>
+  <script src="js/jquery-1.11.2.min.js"/>
+  <script src="js/jquery.form.min.js"/>
+  <script src="js/hex2base.js"/>
+  <script src="js/app.js"/>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>ID and Mobile-ID sample app</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p id="output"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Mobile number" id="mobileno"/>
+      </div>
+    </div>
+    </div>
+  <div class="row">
+     <div class="col-md-12">
+       <div class="form-group">
+         <input type="text" class="form-control" placeholder="ID code" id="idcode"/>
+       </div>
+     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-7">
+      <h3>Authenticate with Mobile-ID</h3>
+      <button class="btn" id="mobileAuthButton" type="button">Authenticate</button>
+    </div>
+
+    <div class="col-md-7">
+      <h3>Authenticate with ID card</h3>
+      <button class="btn" id="authButton" type="button">Authenticate</button>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-md-7">
+      <h3>Select a file to sign</h3>
+      <div class="row">
+        <div class="col-md-12">
+          <form id="fileUpload" action="upload" method="post">
+            <div class="form-group">
+              <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-primary btn-file">
+                                            Browse… <input type="file" name="file" id="file" multiple=""/>
+                                        </span>
+                                    </span>
+                <input type="text" name="fileName" id="fileName" class="form-control" readonly=""/>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="progress">
+            <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-7">
+      <h3>Sign with ID card</h3>
+      <button class="btn" id="signButton" type="button" disabled="disabled">Sign</button>
+    </div>
+    <div class="col-md-7">
+      <h3>Sign with mobile</h3>
+      <button class="btn" id="mobileSignButton" type="button" disabled="disabled">Sign</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-7 hidden" id="downloadSection">
+      <h3>Download signed container</h3>
+      <a href="downloadContainer" class="btn btn-success" id="downloadButton">Download</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
