@@ -42,7 +42,9 @@ public class SignatureHandler {
         sdoc.setProfile(SignedDoc.BDOC_PROFILE_TM);
         System.out.println("creating sdoc " + sdoc.getMimeType());
         //TODO somekind of better solution to add files. Did not find a way to add byte[]
-        sdoc.addDataFile(uploadedFileToDisk(fileManager.getUploadedFile().getBytes()),
+        /*sdoc.addDataFile(uploadedFileToDisk(fileManager.getUploadedFile().getBytes()),
+                "text/plain", DataFile.CONTENT_BINARY);*/
+        sdoc.addDataFile(new File("C:\\Users\\kalver\\IdeaProjects\\dss-hwcrypto-demo-master\\src\\main\\resources\\SOAP\\text.txt"),
                 "text/plain", DataFile.CONTENT_BINARY);
         System.out.println("DATAFILE ADDED " + BouncyCastleProvider.PROVIDER_NAME);
         sig = sdoc.prepareSignature(cert, null, null);
@@ -59,7 +61,8 @@ public class SignatureHandler {
         System.out.println("SIGNATURE " + sig);
         System.out.println("doc " + signedDoc.getFile());
         System.out.println("filemanager " + fileManager);
-        fileManager.setSignedFile(signedDoc.getFile().getBytes());
+        signedDoc.writeToFile(new File("C:\\Users\\kalver\\IdeaProjects\\dss-hwcrypto-demo-master\\src\\main\\resources\\SOAP\\text.bdoc"));
+        //fileManager.setSignedFile(signedDoc.getFile().getBytes());
     }
 
     private File uploadedFileToDisk(byte[] myByteArray){

@@ -186,8 +186,12 @@ public class SigningController {
                         if(docStatus.equalsIgnoreCase("OK")){
                             System.out.println("Downloading file");
                             String escaped = escapeHtml(doc);
-                            byte[] decodedBytes = Base64.getDecoder().decode(escaped);
-                            fileManager.setSignedFile(decodedBytes);
+                            //byte[] decodedBytes = Base64.getDecoder().decode(escaped);
+                            //fileManager.setSignedFile(decodedBytes);
+                            byte[] decodedBytes = org.apache.commons.codec.binary.Base64.decodeBase64(escaped);
+                            try (OutputStream stream = new FileOutputStream("C:\\Users\\kalver\\IdeaProjects\\dss-hwcrypto-demo-master\\src\\main\\resources\\SOAP\\text.bdoc")) {
+                                stream.write(decodedBytes);
+                            }
                         }
                     }
                 }

@@ -89,7 +89,7 @@ enableSign = function() {
 
 disableSign = function() {
     $("#signButton").removeClass("btn-success").prop('disabled', true);
-    $("#mobileSignButton").removeClass("btn-success").prop('disabled', true);
+    //$("#mobileSignButton").removeClass("btn-success").prop('disabled', true);
 };
 
 showDownloadSection = function() {
