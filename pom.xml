@@ -21,7 +21,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>ee.sk.hwcrypto.demo.DssHwcryptoWebappApplication</start-class>
-		<java.version>1.8</java.version>
 	</properties>
 
 	<dependencies>
@@ -76,12 +75,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>iaik.pkcs.pkcs11</groupId>
-			<artifactId>PKCS11-Wrapper</artifactId>
-			<version>1.2.18</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcmail-jdk15on</artifactId>
 			<version>1.51</version>
@@ -97,12 +90,6 @@
 			<version>1.51</version>
 		</dependency>
 
-		<dependency>
-			<groupId>jdom</groupId>
-			<artifactId>jdom</artifactId>
-			<version>1.1</version>
-		</dependency>
-
 	</dependencies>
 	
 	<build>
@@ -116,11 +103,11 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<url>http://localhost:8080/manager/text</url>
+					<url>http://localhost:8080/manager</url>
 					<server>TomcatServer</server>
-					<path>/testid</path>
-					<username>admin</username>
-					<password>admin</password>
+					<path>/iddemo</path>
+					<username>demos</username>
+					<password>regiodemos</password>
 				</configuration>
 			</plugin>
 		</plugins>

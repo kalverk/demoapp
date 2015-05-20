@@ -28,13 +28,11 @@ public class MobileSign {
     public String startSession() throws DigiDocException{
         //Create BDOC to sign
         SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_BDOC, SignedDoc.BDOC_VERSION_2_1);
+        fileManager.setSignedFileType(".bdoc");
         sdoc.setProfile(SignedDoc.BDOC_PROFILE_TM);
         //TODO somekind of better solution to add files. Did not find a way to add byte[]
-        /*sdoc.addDataFile(uploadedFileToDisk(fileManager.getUploadedFile().getBytes()),
-                "text/plain", DataFile.CONTENT_BINARY);*/
-
-        sdoc.addDataFile(new File("C:\\Users\\kalver\\IdeaProjects\\dss-hwcrypto-demo-master\\src\\main\\resources\\SOAP\\text.txt"),
-                "text/plain", DataFile.CONTENT_BINARY);
+        sdoc.addDataFile(new File(fileManager.getUploadedFile().getPath()),
+                fileManager.getUploadedFile().getMimeType(), DataFile.CONTENT_BINARY);
         //Encode BDOC to base64
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         sdoc.writeToStream(outputStream);
@@ -116,20 +114,5 @@ public class MobileSign {
                 "</datafile>" +
                 "</mns:StartSession></SOAP-ENV:Body></SOAP-ENV:Envelope>";
     }
-
-    private File uploadedFileToDisk(byte[] myByteArray){
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("temp").getFile());
-        try{
-            FileOutputStream fos = new FileOutputStream(file.getPath(),false);
-            fos.write(myByteArray);
-            fos.close();
-        }catch (IOException e){
-            log.error("IOException writing to disk " + e);
-        }
-        return file;
-    }
-
-
 
 }

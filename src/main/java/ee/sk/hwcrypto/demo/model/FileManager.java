@@ -10,6 +10,7 @@ public class FileManager {
 
     private UploadedFile uploadedFile;
     private byte[] signedFile;
+    private String signedFileType;
 
     public UploadedFile getUploadedFile() {
         return uploadedFile;
@@ -25,5 +26,13 @@ public class FileManager {
 
     public void setSignedFile(byte[] signedFile) {
         this.signedFile = signedFile;
+    }
+
+    public String getSignedFileType() {
+        return signedFileType;
+    }
+
+    public void setSignedFileType(String signedFileType) {
+        this.signedFileType = signedFileType;
     }
 }

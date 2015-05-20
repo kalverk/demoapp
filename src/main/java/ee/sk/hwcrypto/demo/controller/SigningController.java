@@ -30,6 +30,7 @@ import ee.sk.hwcrypto.demo.model.UploadedFile;
 import ee.sk.hwcrypto.demo.model.Result;
 import ee.sk.hwcrypto.demo.util.SOAPMessageParser;
 import ee.sk.utils.ConfigManager;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,6 @@ import java.io.*;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.Base64;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
@@ -113,7 +113,7 @@ public class SigningController {
         Digest digest = new Digest();
         try {
             CertificateFactory cf =  CertificateFactory.getInstance("X.509");
-            byte[] bytes = Base64.getDecoder().decode(certificate);
+            byte[] bytes = Base64.decodeBase64(certificate);
             InputStream stream = new ByteArrayInputStream(bytes);
             X509Certificate cert = (X509Certificate)cf.generateCertificate(stream);
             cert.checkValidity();
@@ -143,7 +143,9 @@ public class SigningController {
             //TODO can add some additional parameters if necessary, check documentation http://www.id.ee/public/SK-JDD-PRG-GUIDE.pdf
             MobileAuthenticate mobileAuthenticate = new MobileAuthenticate(id.trim(), nationality, phoneNumber.trim(), language, service, messageDisplayedOnPhone, "", type, "", "", "");
             String req = mobileAuthenticate.query();
+            System.out.println(req);
             SOAPMessage result = SOAPQuery(req);
+            soapMessageParser.printSOAPResponse(result);
             String[] qResult = soapMessageParser.parseMobileAuthResponse(result);
             digest.setResult(Result.OK);
             digest.setHex(Arrays.toString(qResult));
@@ -186,12 +188,8 @@ public class SigningController {
                         if(docStatus.equalsIgnoreCase("OK")){
                             System.out.println("Downloading file");
                             String escaped = escapeHtml(doc);
-                            //byte[] decodedBytes = Base64.getDecoder().decode(escaped);
-                            //fileManager.setSignedFile(decodedBytes);
-                            byte[] decodedBytes = org.apache.commons.codec.binary.Base64.decodeBase64(escaped);
-                            try (OutputStream stream = new FileOutputStream("C:\\Users\\kalver\\IdeaProjects\\dss-hwcrypto-demo-master\\src\\main\\resources\\SOAP\\text.bdoc")) {
-                                stream.write(decodedBytes);
-                            }
+                            byte[] decodedBytes = Base64.decodeBase64(escaped);
+                            fileManager.setSignedFile(decodedBytes);
                         }
                     }
                 }
@@ -207,6 +205,7 @@ public class SigningController {
         //TODO can add some additional parameters if necessary, check documentation http://www.sk.ee/upload/files/DigiDocService_spec_est.pdf
         String mobileSignQuery = mobileSign.mobileSignQuery(sessCode, id, phoneNo, "", "Testimine", "", "EST", "", "", "", "", "", "", "asynchClientServer", "", "true", "true");
         SOAPMessage mobileSignSessionResponse = SOAPQuery(mobileSignQuery);
+        soapMessageParser.printSOAPResponse(mobileSignSessionResponse);
         String[] mobileSignParameters = soapMessageParser.parseMobileSignResponse(mobileSignSessionResponse);
         return mobileSignParameters[0];
     }
@@ -261,6 +260,6 @@ public class SigningController {
     }
 
     private void configManagerInit(){
-        ConfigManager.init("C:\\Users\\kalver\\IdeaProjects\\dss-hwcrypto-demo-master\\src\\main\\resources\\jdigidoc.cfg");
+        ConfigManager.init(getClass().getResource("jdigidoc.cfg").getPath());
     }
 }

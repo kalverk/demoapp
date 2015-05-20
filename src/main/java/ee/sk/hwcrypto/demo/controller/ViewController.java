@@ -52,7 +52,8 @@ public class ViewController {
     public void downloadContainer(HttpServletResponse response) {
         byte[] uploadedFile = fileManager.getSignedFile();
         response.setContentType(fileManager.getUploadedFile().getMimeType());
-        response.setHeader("Content-Disposition", "attachment; filename=" + fileManager.getUploadedFile().getFileName());
+        String filename = fileManager.getUploadedFile().getFileName().replaceFirst("[.][^.]+$", "");
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename+fileManager.getSignedFileType());
         try {
             response.getOutputStream().write(uploadedFile);
             response.flushBuffer();
