@@ -36,28 +36,20 @@ public class SignatureHandler {
     public String prepareContract(String den) throws DigiDocException, CertificateException {
         Security.addProvider(new BouncyCastleProvider());
         X509Certificate cert = parseCertificate(den);
-        System.out.println("got cert " + cert.getSubjectDN().getName());
         SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_BDOC, SignedDoc.BDOC_VERSION_2_1);
         sdoc.setProfile(SignedDoc.BDOC_PROFILE_TM);
         fileManager.setSignedFileType(".bdoc");
-        System.out.println("creating sdoc " + sdoc.getMimeType());
         sdoc.addDataFile(new File(fileManager.getUploadedFile().getPath()),
                 fileManager.getUploadedFile().getMimeType(), DataFile.CONTENT_BINARY);
-        System.out.println("DATAFILE ADDED " + BouncyCastleProvider.PROVIDER_NAME);
         sig = sdoc.prepareSignature(cert, null, null);
-        System.out.println("creating sdoc " + sdoc.getFile());
         sig.setProfile(SignedDoc.BDOC_PROFILE_TM);
         byte[] sidigest = sig.calculateSignedInfoDigest();
-        System.out.println("PREPARED");
         return SignedDoc.bin2hex(sidigest);
     }
 
     public void signDocument(String signatureInHex) throws DigiDocException {
         sig.setSignatureValue(SignedDoc.hex2bin(signatureInHex));
         SignedDoc signedDoc = sig.getSignedDoc();
-        System.out.println("SIGNATURE " + sig);
-        System.out.println("doc " + signedDoc.getFile());
-        System.out.println("filemanager " + fileManager);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         signedDoc.writeToStream(baos);
         fileManager.setSignedFile(baos.toByteArray());

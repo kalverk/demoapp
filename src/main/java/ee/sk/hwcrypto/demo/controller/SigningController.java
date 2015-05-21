@@ -86,7 +86,6 @@ public class SigningController {
         Digest digest = new Digest();
         try {
             String data = signatureHandler.prepareContract(cert);
-            System.out.println("signature is ready ");
             digest.setHex(data);
             digest.setResult(Result.OK);
         } catch (Exception e) {
@@ -131,7 +130,6 @@ public class SigningController {
 
     @RequestMapping(value="/mobileauth", method = RequestMethod.POST)
     public Digest mobileAuth(@RequestParam String id,@RequestParam String phoneNumber){
-        System.out.println("mobileauth");
         Digest digest = new Digest();
         try{
             //TODO assign correct parameters
@@ -143,7 +141,6 @@ public class SigningController {
             //TODO can add some additional parameters if necessary, check documentation http://www.id.ee/public/SK-JDD-PRG-GUIDE.pdf
             MobileAuthenticate mobileAuthenticate = new MobileAuthenticate(id.trim(), nationality, phoneNumber.trim(), language, service, messageDisplayedOnPhone, "", type, "", "", "");
             String req = mobileAuthenticate.query();
-            System.out.println(req);
             SOAPMessage result = SOAPQuery(req);
             soapMessageParser.printSOAPResponse(result);
             String[] qResult = soapMessageParser.parseMobileAuthResponse(result);
@@ -161,7 +158,6 @@ public class SigningController {
     public void startsession(@RequestParam String id,@RequestParam String phoneNumber){
         try{
             //Datafile limit 4 MB, if file is bigger send only hex
-            System.out.println("mobilesign");
             //TODO initiate this when app is loaded
             configManagerInit();
 
@@ -172,21 +168,15 @@ public class SigningController {
             String status = responseParameters[0];
             String sessCode = responseParameters[1];
             //Session is started
-            System.out.println("status " + status);
-            System.out.println("sesscode " + sessCode);
             if(status.equalsIgnoreCase("OK")){
-                System.out.println("startsession");
                 String mobileSignQueryStatus = mobileSignQuery(sessCode,id,phoneNumber);
                 if(mobileSignQueryStatus.equalsIgnoreCase("OK")){
-                    System.out.println("Mobilesign is OK");
                     String statusInfo = getStatusInfo(sessCode);
                     if(statusInfo.equalsIgnoreCase("SIGNATURE")){
-                        System.out.println("Signature has been given");
                         String[] document = getSignedDocument(sessCode);
                         String docStatus = document[0];
                         String doc = document[1];
                         if(docStatus.equalsIgnoreCase("OK")){
-                            System.out.println("Downloading file");
                             String escaped = escapeHtml(doc);
                             byte[] decodedBytes = Base64.decodeBase64(escaped);
                             fileManager.setSignedFile(decodedBytes);
@@ -196,7 +186,7 @@ public class SigningController {
             }
 
         }catch (Exception e){
-            System.out.println("Error " + e);
+            log.error("Error " + e);
         }
 
     }
@@ -254,7 +244,7 @@ public class SigningController {
 
             return soapResponse;
         }catch (Exception e) {
-            System.out.println("SOAP Exception " + e);
+            log.error("SOAP Exception " + e);
         }
         return null;
     }

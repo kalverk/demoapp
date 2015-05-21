@@ -103,11 +103,11 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<url>http://localhost:8080/manager</url>
+					<url>http://localhost:8080/manager/text</url>
 					<server>TomcatServer</server>
 					<path>/iddemo</path>
-					<username>demos</username>
-					<password>regiodemos</password>
+					<username>tomcat</username>
+					<password>tomcat</password>
 				</configuration>
 			</plugin>
 		</plugins>
