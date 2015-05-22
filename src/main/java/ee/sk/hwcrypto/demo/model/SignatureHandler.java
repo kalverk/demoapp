@@ -4,8 +4,8 @@ import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignedDoc;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class SignatureHandler {
 
     private X509Certificate parseCertificate(String den) throws CertificateException {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        byte[] bytes = Base64.decodeBase64(den);
+        byte[] bytes = Base64.decode(den);
         return (X509Certificate)cf.generateCertificate(
                 new ByteArrayInputStream(bytes));
     }

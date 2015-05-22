@@ -30,7 +30,7 @@ import ee.sk.hwcrypto.demo.model.UploadedFile;
 import ee.sk.hwcrypto.demo.model.Result;
 import ee.sk.hwcrypto.demo.util.SOAPMessageParser;
 import ee.sk.utils.ConfigManager;
-import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,11 +112,10 @@ public class SigningController {
         Digest digest = new Digest();
         try {
             CertificateFactory cf =  CertificateFactory.getInstance("X.509");
-            byte[] bytes = Base64.decodeBase64(certificate);
+            byte[] bytes = Base64.decode(certificate);
             InputStream stream = new ByteArrayInputStream(bytes);
             X509Certificate cert = (X509Certificate)cf.generateCertificate(stream);
             cert.checkValidity();
-            //result = cert.getSubjectDN().getName();
             digest.setHex(cert.getSubjectDN().getName());
             digest.setResult(Result.OK);
             //TODO create session for user cert.getSubjectDN().getName()
@@ -142,7 +141,6 @@ public class SigningController {
             MobileAuthenticate mobileAuthenticate = new MobileAuthenticate(id.trim(), nationality, phoneNumber.trim(), language, service, messageDisplayedOnPhone, "", type, "", "", "");
             String req = mobileAuthenticate.query();
             SOAPMessage result = SOAPQuery(req);
-            soapMessageParser.printSOAPResponse(result);
             String[] qResult = soapMessageParser.parseMobileAuthResponse(result);
             digest.setResult(Result.OK);
             digest.setHex(Arrays.toString(qResult));
@@ -160,7 +158,6 @@ public class SigningController {
             //Datafile limit 4 MB, if file is bigger send only hex
             //TODO initiate this when app is loaded
             configManagerInit();
-
             String startSessionQuery = mobileSign.startSession();
             SOAPMessage startSessionResponse = SOAPQuery(startSessionQuery);
 
@@ -178,7 +175,7 @@ public class SigningController {
                         String doc = document[1];
                         if(docStatus.equalsIgnoreCase("OK")){
                             String escaped = escapeHtml(doc);
-                            byte[] decodedBytes = Base64.decodeBase64(escaped);
+                            byte[] decodedBytes = Base64.decode(escaped);
                             fileManager.setSignedFile(decodedBytes);
                         }
                     }
@@ -195,7 +192,6 @@ public class SigningController {
         //TODO can add some additional parameters if necessary, check documentation http://www.sk.ee/upload/files/DigiDocService_spec_est.pdf
         String mobileSignQuery = mobileSign.mobileSignQuery(sessCode, id, phoneNo, "", "Testimine", "", "EST", "", "", "", "", "", "", "asynchClientServer", "", "true", "true");
         SOAPMessage mobileSignSessionResponse = SOAPQuery(mobileSignQuery);
-        soapMessageParser.printSOAPResponse(mobileSignSessionResponse);
         String[] mobileSignParameters = soapMessageParser.parseMobileSignResponse(mobileSignSessionResponse);
         return mobileSignParameters[0];
     }
@@ -250,6 +246,7 @@ public class SigningController {
     }
 
     private void configManagerInit(){
-        ConfigManager.init(getClass().getResource("jdigidoc.cfg").getPath());
+        //TODO assign correct jdigidoc.cfg
+        ConfigManager.init("/usr/local/mgine/apache-tomcat-7.0.20/webapps/iddemo/WEB-INF/classes/jdigidoc.cfg");
     }
 }

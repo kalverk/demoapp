@@ -18,7 +18,8 @@ public class UploadedFile {
     public UploadedFile(MultipartFile multipartFile) throws IOException {
         this.fileName = multipartFile.getOriginalFilename();
         this.mimeType = multipartFile.getContentType();
-        this.path = "C:\\demoapp\\src\\main\\resources\\Temp\\" + fileName;
+        //TODO assign correct path to save temp file
+        this.path = "/usr/local/mgine/digidoc/temp/" + fileName;
         try{
             FileOutputStream fos = new FileOutputStream(path,false);
             fos.write(multipartFile.getBytes());
